@@ -1,65 +1,86 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+type Factor = {
+  label: string;
+  value: number;
+};
 
 export default function Home() {
+  const [factors, setFactors] = useState<Factor[]>([
+    { label: "Restaurants nearby", value: 3 },
+    { label: "Attractions & sights", value: 3 },
+    { label: "Distance to city center", value: 3 },
+    { label: "Distance to beach", value: 3 },
+    { label: "Public transport access", value: 3 },
+  ]);
+
+  const updateFactor = (index: number, newValue: number) => {
+    const updated = [...factors];
+    updated[index].value = newValue;
+    setFactors(updated);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="min-h-screen bg-muted flex items-center justify-center px-4">
+      <Card className="w-full max-w-xl">
+        <CardHeader>
+          <CardTitle className="text-2xl">SpotScore</CardTitle>
+          <CardDescription>
+            Customize what matters to you, then calculate a personalized score.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          {/* Location input */}
+          <Input placeholder="Enter address or place name…" />
+
+          {/* Factors */}
+          <div className="space-y-5">
+            {factors.map((factor, index) => (
+              <div key={factor.label} className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>{factor.label}</span>
+                  <span className="font-medium">{factor.value}</span>
+                </div>
+
+                <Slider
+                  min={1}
+                  max={5}
+                  step={1}
+                  value={[factor.value]}
+                  onValueChange={(v) => updateFactor(index, v[0])}
+                />
+              </div>
+            ))}
+          </div>
+
+          <Button className="w-full">
+            Calculate score
+          </Button>
+
+          {/* Dummy result */}
+          <div className="text-center pt-4">
+            <div className="text-sm text-muted-foreground">
+              Your SpotScore
+            </div>
+            <div className="text-4xl font-bold">
+              8.6
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </main>
   );
 }
