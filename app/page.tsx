@@ -11,7 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import MapView from "@/components/MapView";
+import dynamic from "next/dynamic";
+
+const MapView = dynamic(() => import("@/components/MapView"), {
+  ssr: false,
+});
+
+import "leaflet/dist/leaflet.css";
 
 
 type Factor = {
